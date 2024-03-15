@@ -1,15 +1,9 @@
-import random 
-from prettytable import PrettyTable
 import sys
-
-
-
-
+from prettytable import PrettyTable
 
 class GestionChampionnat:
-    listChampionnat=[]
-    # def __init__(self):
-    # @staticmethod
+    listChampionnat = []
+
     def menu(self):
         print("1/ Ajouter championnat")
         print("2/ Ajouter equipe")
@@ -20,172 +14,131 @@ class GestionChampionnat:
         print("7/ Quitter l'application")
 
         choixMenu = int(input("Choisissez l'option de votre choix dans le menu suivant le numéro indiquer ?"))
-        while(choixMenu != 7):
-            if (choixMenu == 1):
-                gestion_championnat = Championnat()
-                # Championnat.ajouter_classement()
-                more_data = input("Avez vous d'autre donnée a enregistrer ? (Si oui répondez oui sinon non)")
-                if (more_data == "oui"):
-                    return GestionChampionnat.menu(self)
-                else : 
-                    print("Merci pour votre ajout")
-                    print(GestionChampionnat.listChampionnat)
-                return "Championnat ajouter"
+        while choixMenu <= 7:
+            if choixMenu == 1:
+                Championnat.ajouter_championnat(self)
+            elif choixMenu == 2:
+                Equipe.ajouter_equipe(self)
+            elif choixMenu == 3:
+                Match.ajout_resultat_matche(self)
+            elif choixMenu == 4:
+                GestionChampionnat.afficher_list_championnats(self)
+            elif choixMenu == 5:
+                GestionChampionnat.afficher_equipes_championnat(self)
+            elif choixMenu == 6:
+                GestionChampionnat.afficher_classement_championnat(self)
+            elif choixMenu == 7:
+                exit()
+
+            choixMenu = int(input("Choisissez l'option de votre choix dans le menu suivant le numéro indiquer ? "))
 
 
-            elif (choixMenu == 2): # Ajoutez une équipe a la liste des equipes 
-                equipe = Equipe() 
-                Equipe.list_info_equipe.append([equipe.nom,equipe.date_creation,equipe.stade,equipe.capacite_stade,equipe.entraineur,equipe.president])               
-                more_data = input("Avez vous d'autre donnée a enregistrer ? (Si oui répondez oui sinon non)")
-                if (more_data == "oui"):
-                    return GestionChampionnat.menu(self)
-                else : 
-                    return "Merci de votre ajout"
+    @staticmethod
+    def afficher_list_championnats(self):
+        if GestionChampionnat.listChampionnat:
+            for champ in GestionChampionnat.listChampionnat:
+                print(champ)
+        else:
+            print("Pas de championnat disponible.")
+        
+        GestionChampionnat.menu(self)
 
-            elif (choixMenu == 3): # Saisir le résultat d'un matche A REFAIRE 
-                matche = Match.ajout_resultat_matche(self)  
-                Match.list_info_matche.append([matche.score_equipe_1,matche.score_equipe_2,matche.numero_journee,matche.equipe_1,matche.equipe_2])
-                more_data = input("Avez vous d'autre donnée a enregistrer ? (Si oui répondez oui sinon non)")
-                if (more_data == "oui"):
-                    print(Match.list_info_equipe)
-                    return GestionChampionnat.menu(self)
-                else : 
-                    return "Merci de votre ajout"
-                    print(Match.list_info_equipe)
+    @staticmethod
+    def afficher_equipes_championnat(self):
+        Equipe.afficher_equipe(self)
+        GestionChampionnat.menu(self)
+        
 
-            elif (choixMenu == 4): # Afficher les championnats A REFAIRE
-                print(Championnat.afficher(self,gestion_championnat))
-                return "Choix quatres"
-                more_data = input("Avez vous d'autre donnée a enregistrer ? (Si oui répondez oui sinon non)")
-
-            elif (choixMenu == 5): # Afficher la liste des équipes d’un championnat.
-                if (Equipe.list_info_equipe != []) : 
-                    # Pourquoi qu'une info dans la liste list_info_equipe
-                    print(Equipe.list_info_equipe)
-                    for equipe in Equipe.list_info_equipe:
-                        print(equipe)
-                else : 
-                    return ("Pas d'information")
-                    
-                more_data = input("Avez vous d'autre donnée a enregistrer ? (Si oui répondez oui sinon non)")
-
-            elif (choixMenu == 6): # Afficher le classement d’un championnat
-                choixMenu = int(input("Choisissez l'option de votre choix dans le menu suivant le numéro indiquer ?"))
-                return Championnat.afficher(self)
-                more_data = input("Avez vous d'autre donnée a enregistrer ? (Si oui répondez oui sinon non)")
-            elif (choixMenu == 7): # Quitter l'application 
-                sys.exit()
-
-    def affiche_menu():
-        menu = menu()
-        return (menu)
+    @staticmethod
+    def afficher_classement_championnat(self):
+        if(Championnat.list_data_championnat != None):
+            for champ in GestionChampionnat.listChampionnat:
+                print(Championnat.afficher_classement(self))
+        else : 
+            print("Ajoutez d'abord un championnat")
+        GestionChampionnat.menu(self)
 
 class Championnat:
     id_counter = 0
-    listChampionnat = []  # Ajout de la liste des championnats à la classe
+    list_data_championnat = []
 
     def __init__(self):
-        Championnat.id_counter +=1
+        Championnat.id_counter += 1
         self.id = Championnat.id_counter
         self.nom = input("Nom du championnat : ")
-        self.pays = input("pays : ")
-        self.date_debut = input("Date de début :")
-        self.date_fin = input("Date de fin :")
-        self.point_gagne = int(input("Nombre de point gagné :"))
-        self.point_perdu = int(input("Nombre de point perdu :"))
-        self.point_nul = int(input("Nombre de point obtenu pendant un matche nul :"))
-        self.type_classement = input("Type de classement :")
-        self.point=int(input("Nombre de point :"))
-        self.equipes = input("Nom des équipe :")
-        self.matchs = int(input("Nombre de matche :"))
-        GestionChampionnat.listChampionnat.append(self.nom)
+        self.pays = input("Pays : ")
+        self.date_debut = int(input("Date de début : "))
+        self.date_fin = int(input("Date de fin : "))
+        self.point_gagne = int(input("Nombre de points gagnés : "))
+        self.point_perdu = int(input("Nombre de points perdus : "))
+        self.point_nul = int(input("Nombre de points pour les matchs nuls : "))
+        self.type_classement = input("Type de classement : ")
+        self.equipes = input("Noms des équipes : ")
+        self.matchs = input("Nombre de matchs : ")
 
-    @staticmethod
-    def ajouter_classement():
-        # Créez une nouvelle instance de Championnat
-        nouveau_championnat = Championnat()
 
-        # Saisie des données depuis l'utilisateur
-        Championnat.id_counter +=1
-        self.id = Championnat.id_counter
-        nouveau_championnat_nom = input("Nom du championnat : ")
-        nouveau_championnat.pays = input("Nom du pays d'ou provient le championnat : ")
-        nouveau_championnat.date_debut = input("Date de début du championnat : ")
-        nouveau_championnat.date_fin = input("Date de fin du championnat : ")
-        nouveau_championnat.point_gagne = int(input("Nombre de points gagnés : "))
-        nouveau_championnat.point_perdu = int(input("Nombre de points perdus : "))
-        nouveau_championnat.point_nul = int(input("Nombre de points pour les matchs nuls : "))
-        nouveau_championnat.type_classement = input("Type de classement : ")
-        nouveau_championnat.equipes = input("Noms de l'équipe : ")
-        nouveau_championnat.matchs = int(input("Nombre de matchs joués : "))
-
-        # Ajout de la nouvelle instance à la liste des championnats
-        Championnat.listChampionnat.append(nouveau_championnat)
-
-        # Retournez la nouvelle instance créée
-        return 'enregistrer'
+    def ajouter_championnat(self):
+        championnat = Championnat()
+        Championnat.list_data_championnat.append([championnat.id,championnat.nom,championnat.point_gagne,championnat.point_perdu,championnat.point_nul,championnat.matchs])
+        GestionChampionnat.listChampionnat.append(championnat.nom)
+        GestionChampionnat.menu(self)
 
     def calculer_point(self):
-        self.point = self.point_gagne +  self.point_perdu + self.point_nul 
-        return self.point
+        print(self.point_gagne + self.point_perdu + self.point_nul)
+        GestionChampionnat.menu(self)
 
-    def afficher(self):
-        DataChampionnat = PrettyTable()
-        DataChampionnat.field_names = ["ID", "Nom", "Date Début", "Date Fin", "Points Gagnés", "Points Perdus", "Points Nuls", "Type Classement", "Équipes", "Matchs"]
-
-        DataChampionnat.add_row([self.id, self.nom, self.date_debut, self.date_fin, self.point_gagne, self.point_perdu, self.point_nul, self.type_classement, self.equipes, self.matchs])
-    
-        return DataChampionnat
-
-    def afficher_classement(self,gestion_chamionnat):
-        DataClassement = PrettyTable()
-        DataClassement.field_names = ["id", "nom", "Pts", "J.", "G.", "N.", "P."]
-
-        DataClassement.add_row([self.id, self.equipes, self.point, self.matchs, self.point_gagne, self.point_nul, self.point_perdu])
-
-        return DataClassement
+    def afficher_classement(self):
+        table = PrettyTable()
+        table.field_names = ["ID", "Nom", "Points", "Matchs"]
+        for index in range(len(Championnat.list_data_championnat)): 
+            calculer_point = Championnat.list_data_championnat[index][2] + Championnat.list_data_championnat[index][4] + Championnat.list_data_championnat[index][3]
+            table.add_row([Championnat.list_data_championnat[index][0], Championnat.list_data_championnat[index][1], calculer_point, Championnat.list_data_championnat[index][5]])
+        return table
+        GestionChampionnat.menu(self)
 
 class Match:
     list_info_matche = []
-    def __init__(self):
-        self.score_equipe_1 = ""
-        self.score_equipe_2 = ""
-        self.numero_journee = ""
-        self.equipe_1 = ""
-        self.equipe_2 = ""
-    
+
+    @staticmethod
     def ajout_resultat_matche(self):
-        self.score_equipe_1 = int(input("Qu'elle est le score de l'équipe numéro 1 : ")) 
-        self.score_equipe_2 = int(input("Qu'elle est le score de l'équipe numéro 2 : ")) 
-        self.numero_journee = int(input("Qu'elle est le numéro de la journée : "))
-        self.equipe_1 = input("Nom de l'équipe numéro une : ")
-        self.equipe_2 = input("Nom de l'équipe numéro deux : ")
-
-    def score_equipe_1(self):
-        return ("score de l'équipe numéro 1 :",self.score_equipe_1)
-
-    def score_equipe_2(self):
-        return ("score de l'équipe numéro 1 :",self.score_equipe_2)
+        score_equipe_1 = int(input("Score de l'équipe numéro 1 : ")) 
+        score_equipe_2 = int(input("Score de l'équipe numéro 2 : ")) 
+        numero_journee = int(input("Numéro de la journée : "))
+        equipe_1 = input("Nom de l'équipe numéro une : ")
+        equipe_2 = input("Nom de l'équipe numéro deux : ")
+        Match.list_info_matche.append([score_equipe_1, score_equipe_2, numero_journee, equipe_1, equipe_2])
+        GestionChampionnat.menu(self)
 
 class Equipe:
     equipe_id = 0
-    list_info_equipe = [] 
-    def __init__(self):
-        Equipe.equipe_id =+ 1
-        self.id = Equipe.equipe_id
-        self.nom = input("Qu'elle est le nom de cette équipe : ")
-        self.date_creation = int(input("Qu'elle est la date de création de votre club : "))
-        self.capacite_stade = int(input("Qu'elle est la capacité du stade : "))
-        self.stade = input("Qu'elle est le nom du stade : ")
-        self.entraineur = input("Qu'elle est le nom de l'entraineur : ")
-        self.president = input("Qu'elle est le nom du président : ")
+    list_info_equipe = []
 
-    def afficher(self):
-        return (        
-            "id :", self.id,
-            "nom : ", self.nom,
-            "date de création", self.date_creation,
-            "Nom du stade :", self.stade,
-            "Nom de l'entraineur :",self.entraineur,
-            "Nom du président du club :",self.president,
-        )
+    def __init__(self):
+        Equipe.equipe_id += 1
+        self.id = Equipe.equipe_id
+        self.nom = input("Nom de l'équipe : ")
+        self.date_creation = int(input("Date de création : "))
+        self.capacite_stade = int(input("Capacité du stade : "))
+        self.stade = input("Nom du stade : ")
+        self.entraineur = input("Nom de l'entraineur : ")
+        self.president = input("Nom du président : ")
+
+    @staticmethod
+    def ajouter_equipe(self):
+        equipe = Equipe()
+        print(equipe.nom)
+        Equipe.list_info_equipe.append([equipe.nom,equipe.date_creation,equipe.capacite_stade,equipe.stade,equipe.entraineur,equipe.president])
+        GestionChampionnat.menu(self)
+
+    def afficher_equipe(self):
+        if (Equipe.list_info_equipe != None):
+            print(Equipe.list_info_equipe)
+        else : 
+            print("Crée une équipe d'abord")
+
+def main(self):
+    gestionnaire = GestionChampionnat()
+    gestionnaire.menu(self)
+
+if __name__ == "__main__":
+    main()
